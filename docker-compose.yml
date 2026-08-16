@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: log_analyzer
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  server:
+    build: ./server
+    environment:
+      PORT: 10000
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/log_analyzer
+      JWT_SECRET: change-me
+      CLIENT_URL: http://localhost:5173
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      MAX_UPLOAD_MB: 10
+    ports:
+      - "10000:10000"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
