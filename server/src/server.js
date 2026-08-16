@@ -1361,6 +1361,7 @@ initDb()
 
         app.listen(
             port,
+            "0.0.0.0",
             () =>
                 console.log(
                     `API listening on ${port}`
